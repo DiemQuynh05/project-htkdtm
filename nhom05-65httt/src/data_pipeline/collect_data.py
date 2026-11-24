@@ -23,9 +23,11 @@ PROCESSED_DATA_DIR = os.path.join(BASE_DIR, "data", "processed")
 os.makedirs(os.path.join(RAW_DATA_DIR, "vietjobs"), exist_ok=True)
 os.makedirs(os.path.join(RAW_DATA_DIR, "oulad"), exist_ok=True)
 os.makedirs(os.path.join(RAW_DATA_DIR, "course_reviews"), exist_ok=True)
+os.makedirs(os.path.join(RAW_DATA_DIR, "wef"), exist_ok=True)
 os.makedirs(os.path.join(PROCESSED_DATA_DIR, "vietjobs"), exist_ok=True)
 os.makedirs(os.path.join(PROCESSED_DATA_DIR, "oulad"), exist_ok=True)
 os.makedirs(os.path.join(PROCESSED_DATA_DIR, "course_reviews"), exist_ok=True)
+os.makedirs(os.path.join(PROCESSED_DATA_DIR, "wef"), exist_ok=True)
 
 np.random.seed(42)
 random.seed(42)
@@ -404,9 +406,94 @@ def generate_raw_course_reviews(n_reviews=3000):
     return df_reviews_raw
 
 
+def generate_raw_wef_data():
+    """
+    Thu thập và mô phỏng dữ liệu Báo cáo xu hướng nghề nghiệp quốc tế (World Economic Forum - WEF)
+    Nguồn: WEF The Future of Jobs Report.
+    Bao gồm các nhóm:
+    - Emerging Jobs (Nghề tăng trưởng nhanh)
+    - Declining Jobs (Nghề có xu hướng suy giảm)
+    - Core Skills (Kỹ năng cốt lõi toàn cầu)
+    - Technology Adoption (Xu hướng áp dụng công nghệ)
+    """
+    wef_dir = os.path.join(RAW_DATA_DIR, "wef")
+    
+    items = [
+        # Emerging Jobs
+        {"cat": "Emerging Jobs", "name": "AI and Machine Learning Specialist", "growth": 38.5, "demand": "Very High", "sec": "Information Technology", "reskill": 9, "vn": "High", "desc": "Thiết kế, xây dựng và triển khai các thuật toán học máy, mô hình học sâu và ứng dụng AI thông minh."},
+        {"cat": "Emerging Jobs", "name": "Data Analyst and Scientist", "growth": 34.2, "demand": "Very High", "sec": "Data & AI", "reskill": 6, "vn": "High", "desc": "Khai phá, phân tích dữ liệu lớn và trích xuất thông tin chiến lược hỗ trợ ra quyết định kinh doanh."},
+        {"cat": "Emerging Jobs", "name": "Big Data Specialist", "growth": 30.1, "demand": "High", "sec": "Data Engineering", "reskill": 6, "vn": "High", "desc": "Xây dựng hạ tầng dữ liệu phân tán, đường ống ETL và Data Lake / Data Warehouse."},
+        {"cat": "Emerging Jobs", "name": "Information Security Analyst (Cybersecurity)", "growth": 31.0, "demand": "Very High", "sec": "Security & Defense", "reskill": 8, "vn": "High", "desc": "Bảo vệ hệ thống hạ tầng thông tin, an ninh mạng và an toàn dữ liệu doanh nghiệp."},
+        {"cat": "Emerging Jobs", "name": "Fintech Engineer", "growth": 28.5, "demand": "High", "sec": "Financial Services", "reskill": 6, "vn": "High", "desc": "Phát triển các giải pháp công nghệ tài chính, thanh toán số và ngân hàng điện tử."},
+        {"cat": "Emerging Jobs", "name": "DevOps & Cloud Architect", "growth": 27.4, "demand": "High", "sec": "Cloud & Infrastructure", "reskill": 6, "vn": "High", "desc": "Tự động hóa triển khai phần mềm, tích hợp liên tục CI/CD và quản trị đám mây AWS/GCP/Azure."},
+        {"cat": "Emerging Jobs", "name": "Business Intelligence Specialist", "growth": 25.8, "demand": "High", "sec": "Enterprise Analytics", "reskill": 5, "vn": "High", "desc": "Thiết kế dashboard trực quan hóa chỉ số KPI kinh doanh và xây dựng mô hình Star Schema."},
+        {"cat": "Emerging Jobs", "name": "Robotics Engineer", "growth": 22.0, "demand": "Moderate", "sec": "Manufacturing & Automation", "reskill": 12, "vn": "Medium", "desc": "Nghiên cứu chế tạo robot tự động hóa dây chuyền sản xuất công nghiệp."},
+        {"cat": "Emerging Jobs", "name": "Digital Transformation Specialist", "growth": 26.3, "demand": "High", "sec": "Management Consulting", "reskill": 6, "vn": "High", "desc": "Tư vấn và thúc đẩy quá trình chuyển đổi số quy trình kinh doanh trong doanh nghiệp."},
+        {"cat": "Emerging Jobs", "name": "Renewable Energy Engineer", "growth": 29.5, "demand": "High", "sec": "Energy & Sustainability", "reskill": 10, "vn": "Emerging", "desc": "Nghiên cứu và phát triển nguồn năng lượng tái tạo, điện gió và điện mặt trời."},
+        
+        # Declining Jobs
+        {"cat": "Declining Jobs", "name": "Data Entry Clerk", "growth": -32.0, "demand": "Declining", "sec": "Administrative Support", "reskill": 3, "vn": "High", "desc": "Nhập liệu thủ công bị thay thế bởi các hệ thống OCR, RPA và AI tự động trích xuất thông tin."},
+        {"cat": "Declining Jobs", "name": "Administrative and Executive Secretary", "growth": -26.5, "demand": "Declining", "sec": "Office Operations", "reskill": 4, "vn": "High", "desc": "Công việc thư ký hành chính truyền thống chuyển dần sang trợ lý ảo AI và phần mềm tự động."},
+        {"cat": "Declining Jobs", "name": "Accounting and Bookkeeping Clerk", "growth": -28.0, "demand": "Declining", "sec": "Financial Operations", "reskill": 5, "vn": "High", "desc": "Kế toán ghi sổ sơ cấp được tự động hóa bằng phần mềm kế toán số và hóa đơn điện tử."},
+        {"cat": "Declining Jobs", "name": "Bank Teller and Related Clerks", "growth": -29.0, "demand": "Declining", "sec": "Retail Banking", "reskill": 4, "vn": "High", "desc": "Giao dịch viên ngân hàng giảm mạnh do sự phổ biến của Mobile Banking và Digital Onboarding."},
+        {"cat": "Declining Jobs", "name": "Postal Service Clerk", "growth": -30.5, "demand": "Declining", "sec": "Logistics & Post", "reskill": 3, "vn": "Medium", "desc": "Thủ tục bưu chính truyền thống giảm do thư tín điện tử và hệ thống kho vận thông minh."},
+
+        # Core Skills
+        {"cat": "Core Skills", "name": "Analytical Thinking & Problem Solving", "growth": 45.0, "demand": "Very High", "sec": "Cross-Industry", "reskill": 4, "vn": "High", "desc": "Khả năng tư duy logic, phân tích dữ kiện và giải quyết vấn đề phức tạp dựa trên bằng chứng số liệu."},
+        {"cat": "Core Skills", "name": "AI, Machine Learning & Big Data Literacy", "growth": 52.0, "demand": "Very High", "sec": "Technology", "reskill": 6, "vn": "High", "desc": "Hiểu biết và kỹ năng ứng dụng AI, mô hình ngôn ngữ lớn và khai thác dữ liệu trong công việc."},
+        {"cat": "Core Skills", "name": "Creative Thinking & Innovation", "growth": 40.5, "demand": "Very High", "sec": "Cross-Industry", "reskill": 5, "vn": "High", "desc": "Tư duy sáng tạo, khả năng đề xuất ý tưởng đột phá và giải pháp mới cho doanh nghiệp."},
+        {"cat": "Core Skills", "name": "Cybersecurity and Systems Thinking", "growth": 36.0, "demand": "High", "sec": "Technology & Governance", "reskill": 6, "vn": "High", "desc": "Tư duy hệ thống kiến trúc và nhận thức bảo đảm an toàn dữ liệu số."},
+        {"cat": "Core Skills", "name": "Resilience, Flexibility and Agility", "growth": 35.0, "demand": "High", "sec": "Personal Competency", "reskill": 3, "vn": "High", "desc": "Khả năng thích ứng linh hoạt với sự thay đổi của công nghệ và môi trường làm việc mới."},
+        
+        # Technology Adoption
+        {"cat": "Technology Adoption", "name": "Cloud Computing Platforms", "growth": 86.0, "demand": "Very High", "sec": "IT Infrastructure", "reskill": 6, "vn": "High", "desc": "86% doanh nghiệp dự kiến mở rộng hạ tầng đám mây trong giai đoạn 2024-2027."},
+        {"cat": "Technology Adoption", "name": "Big Data Analytics & BI Platforms", "growth": 82.0, "demand": "Very High", "sec": "Enterprise Analytics", "reskill": 5, "vn": "High", "desc": "82% doanh nghiệp đầu tư nền tảng phân tích dữ liệu lớn và báo cáo thông minh."},
+        {"cat": "Technology Adoption", "name": "Generative AI & LLMs", "growth": 75.0, "demand": "Very High", "sec": "Artificial Intelligence", "reskill": 4, "vn": "High", "desc": "75% doanh nghiệp tích cực nghiên cứu và ứng dụng Generative AI để tăng năng suất lao động."},
+        {"cat": "Technology Adoption", "name": "Internet of Things (IoT) & Connected Devices", "growth": 68.0, "demand": "High", "sec": "Smart Devices & Hardware", "reskill": 6, "vn": "High", "desc": "Ứng dụng cảm biến thông minh và mạng kết nối vạn vật trong theo dõi vận hành."},
+        {"cat": "Technology Adoption", "name": "Robotics & Autonomous Automation", "growth": 55.0, "demand": "Moderate", "sec": "Automation", "reskill": 8, "vn": "Medium", "desc": "Tự động hóa dây chuyền sản xuất và kho bãi thông minh."}
+    ]
+    
+    records = []
+    for i, it in enumerate(items):
+        name = it["name"]
+        # Thêm nhiễu khoảng trắng hoặc ký tự
+        if random.random() < 0.2:
+            name = f"  {name}  "
+            
+        desc = it["desc"]
+        if random.random() < 0.15:
+            desc = f"<p><b>{it['name']}</b>: {desc}</p>"
+            
+        records.append({
+            "trend_id": f"WEF_{i+1:03d}",
+            "report_source": "World Economic Forum - Future of Jobs Report",
+            "category": it["cat"],
+            "item_name": name,
+            "growth_rate_pct": it["growth"],
+            "demand_level": it["demand"],
+            "impact_sector": it["sec"],
+            "reskilling_duration_months": it["reskill"],
+            "relevance_to_vietnam": it["vn"],
+            "description": desc
+        })
+        
+    df = pd.DataFrame(records)
+    # Thêm bản ghi trùng lặp
+    dup = df.sample(n=6, random_state=42).copy()
+    dup["trend_id"] = [f"WEF_DUP_{j:02d}" for j in range(len(dup))]
+    df_raw = pd.concat([df, dup], ignore_index=True)
+    df_raw = df_raw.sample(frac=1, random_state=42).reset_index(drop=True)
+    
+    out_path = os.path.join(wef_dir, "wef_trends_raw.csv")
+    df_raw.to_csv(out_path, index=False, encoding="utf-8-sig")
+    print(f"[WEF Trends] Đã tạo raw dataset: {out_path} ({len(df_raw)} bản ghi, có ~{len(dup)} bản ghi trùng lặp)")
+    return df_raw
+
+
 if __name__ == "__main__":
     print("=== BẮT ĐẦU THU THẬP & KHỞI TẠO TẬP DỮ LIỆU GỐC (RAW DATA) ===")
     generate_raw_vietjobs_data(n_samples=2500)
     generate_raw_oulad_data()
     generate_raw_course_reviews(n_reviews=3000)
+    generate_raw_wef_data()
     print("=== THU THẬP HOÀN TẤT VÀ LƯU VÀO data/raw/ ===")

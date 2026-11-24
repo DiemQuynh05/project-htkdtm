@@ -5,17 +5,18 @@
     "student_id": "2351160500",
     "role": "Thu thập & xử lý dữ liệu"
   },
-  "execution_timestamp": "2026-11-24 16:45:02",
-  "duration_seconds": 1.2,
+  "execution_timestamp": "2026-11-24 17:53:11",
+  "duration_seconds": 1.28,
   "acceptance_criteria_evaluation": {
     "criterion_1_datasets_integrated": {
       "metric": "Số nhóm dữ liệu được tích hợp",
       "target": "Ít nhất 3 nhóm",
-      "actual": 3,
+      "actual": 4,
       "dataset_names": [
         "VietJobs (Tuyển dụng VN)",
         "OULAD (Hành vi học tập)",
-        "Course Reviews (Chất lượng khóa học)"
+        "Course Reviews (Chất lượng khóa học)",
+        "WEF Trends (Xu hướng nghề nghiệp quốc tế)"
       ],
       "status": "PASSED"
     },
@@ -58,11 +59,21 @@
       "target_duplicate_rate": "< 1.0%",
       "status": "PASSED"
     },
+    "wef_trends": {
+      "dataset_name": "WEF International Trends",
+      "initial_records": 31,
+      "duplicates_removed": 6,
+      "final_records": 25,
+      "duplicate_rate_before": "19.35%",
+      "duplicate_rate_after": "0.00%",
+      "target_duplicate_rate": "< 1.0%",
+      "status": "PASSED"
+    },
     "overall_summary": {
-      "total_initial_records": 28244,
-      "total_duplicates_removed": 3738,
-      "total_clean_records": 24506,
-      "average_reduction_ratio": "13.23%"
+      "total_initial_records": 28275,
+      "total_duplicates_removed": 3744,
+      "total_clean_records": 24531,
+      "average_reduction_ratio": "13.24%"
     }
   }
 }

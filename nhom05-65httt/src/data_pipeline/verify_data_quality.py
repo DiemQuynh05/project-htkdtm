@@ -104,6 +104,22 @@ def check_datasets_quality():
     else:
         print("    -> [FAIL] Course Reviews không đạt tiêu chuẩn!")
         all_passed = False
+
+    # 4. WEF International Trends
+    wef_file = os.path.join(PROCESSED_DIR, "wef", "wef_trends_cleaned.csv")
+    if not os.path.exists(wef_file):
+        print(f"[FAIL] Không tìm thấy file WEF Trends: {wef_file}")
+        return False
+        
+    df_wef = pd.read_csv(wef_file)
+    wef_dups = df_wef.duplicated(subset=["category", "item_name"]).sum()
+    wef_dup_rate = (wef_dups / len(df_wef)) * 100
+    print(f"[*] WEF Trends: {len(df_wef)} xu hướng quốc tế | Bản ghi trùng: {wef_dups} ({wef_dup_rate:.2f}%)")
+    if wef_dup_rate < 1.0 and len(df_wef) >= 20:
+        print("    -> [PASS] WEF Trends đạt tiêu chuẩn (Báo cáo xu hướng WEF đầy đủ, không trùng lặp)")
+    else:
+        print("    -> [FAIL] WEF Trends không đạt tiêu chuẩn!")
+        all_passed = False
         
     return all_passed
 

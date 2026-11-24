@@ -23,12 +23,14 @@ from collect_data import (
     generate_raw_vietjobs_data,
     generate_raw_oulad_data,
     generate_raw_course_reviews,
+    generate_raw_wef_data,
     RAW_DATA_DIR,
     PROCESSED_DATA_DIR
 )
 from clean_vietjobs import clean_vietjobs_pipeline
 from clean_oulad import clean_oulad_pipeline
 from clean_course_reviews import clean_course_reviews_pipeline
+from clean_wef import clean_wef_pipeline
 
 
 def execute_full_pipeline():
@@ -45,6 +47,7 @@ def execute_full_pipeline():
     generate_raw_vietjobs_data(n_samples=2500)
     generate_raw_oulad_data()
     generate_raw_course_reviews(n_reviews=3000)
+    generate_raw_wef_data()
     print(">>> [GIAI ĐOẠN 1] HOÀN TẤT THU THẬP DỮ LIỆU THÔ.\n")
     
     # Bước 2: Làm sạch, chuẩn hóa và loại bỏ trùng lặp
@@ -64,6 +67,11 @@ def execute_full_pipeline():
     reviews_raw = os.path.join(RAW_DATA_DIR, "course_reviews", "course_reviews_raw.csv")
     reviews_clean = os.path.join(PROCESSED_DATA_DIR, "course_reviews", "course_reviews_cleaned.csv")
     rev_stats = clean_course_reviews_pipeline(reviews_raw, reviews_clean)
+
+    # 2.4. WEF International Trends
+    wef_raw = os.path.join(RAW_DATA_DIR, "wef", "wef_trends_raw.csv")
+    wef_clean = os.path.join(PROCESSED_DATA_DIR, "wef", "wef_trends_cleaned.csv")
+    wef_stats = clean_wef_pipeline(wef_raw, wef_clean)
     
     print("\n>>> [GIAI ĐOẠN 2] HOÀN TẤT TIỀN XỬ LÝ DỮ LIỆU.\n")
     
@@ -71,7 +79,7 @@ def execute_full_pipeline():
     end_time = datetime.now()
     execution_duration = (end_time - start_time).total_seconds()
     
-    all_stats = [vj_stats, oulad_stats, rev_stats]
+    all_stats = [vj_stats, oulad_stats, rev_stats, wef_stats]
     total_initial = sum(s["initial_records"] for s in all_stats)
     total_dups_removed = sum(s["duplicates_removed"] for s in all_stats)
     total_final = sum(s["final_records"] for s in all_stats)
@@ -90,7 +98,12 @@ def execute_full_pipeline():
                 "metric": "Số nhóm dữ liệu được tích hợp",
                 "target": "Ít nhất 3 nhóm",
                 "actual": len(all_stats),
-                "dataset_names": ["VietJobs (Tuyển dụng VN)", "OULAD (Hành vi học tập)", "Course Reviews (Chất lượng khóa học)"],
+                "dataset_names": [
+                    "VietJobs (Tuyển dụng VN)",
+                    "OULAD (Hành vi học tập)",
+                    "Course Reviews (Chất lượng khóa học)",
+                    "WEF Trends (Xu hướng nghề nghiệp quốc tế)"
+                ],
                 "status": "PASSED" if len(all_stats) >= 3 else "FAILED"
             },
             "criterion_2_duplicate_rate": {
@@ -104,6 +117,7 @@ def execute_full_pipeline():
             "vietjobs": vj_stats,
             "oulad": oulad_stats,
             "course_reviews": rev_stats,
+            "wef_trends": wef_stats,
             "overall_summary": {
                 "total_initial_records": total_initial,
                 "total_duplicates_removed": total_dups_removed,

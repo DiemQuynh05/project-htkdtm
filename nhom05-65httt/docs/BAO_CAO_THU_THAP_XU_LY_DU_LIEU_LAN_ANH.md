@@ -10,10 +10,11 @@
 ## 1. Mục Tiêu & Căn Cứ Đề Cương
 
 Căn cứ theo **Đề cương bài tập lớn nhóm 05** (Mục IV.2 và IV.3):
-- **Nhiệm vụ chính:** Thu thập dữ liệu từ 3 nguồn: **VietJobs**, **OULAD**, **Dữ liệu đánh giá khóa học (Course Reviews)**; thực hiện làm sạch dữ liệu (data cleaning), chuẩn hóa trường thông tin (standardization), và loại bỏ triệt để các bản ghi trùng lặp (deduplication).
+- **Nhiệm vụ chính:** Thu thập dữ liệu từ 4 nguồn: **VietJobs**, **OULAD**, **Dữ liệu đánh giá khóa học (Course Reviews)**, và **Báo cáo xu hướng nghề nghiệp quốc tế (World Economic Forum - WEF)**; thực hiện làm sạch dữ liệu (data cleaning), chuẩn hóa trường thông tin (standardization), loại bỏ triệt để các bản ghi trùng lặp (deduplication) và thiết kế CSDL quan hệ trên PostgreSQL 16.x.
 - **Tiêu chí đánh giá nghiệm thu:**
-  1. *Số nhóm dữ liệu được tích hợp:* **Ít nhất 3 nhóm** (Đạt: **3/3 nhóm**).
+  1. *Số nhóm dữ liệu được tích hợp:* **Ít nhất 3 nhóm** (Đạt: **4 nhóm**).
   2. *Tỷ lệ bản ghi trùng lặp sau xử lý:* **Dưới 1%** (Đạt: **0.00%**).
+  3. *Cơ sở dữ liệu:* Xây dựng hoàn chỉnh Schema trên PostgreSQL, Star Schema cho BI, sẵn sàng nạp dữ liệu.
 
 ---
 
@@ -61,6 +62,22 @@ Cấu trúc lưu trữ dữ liệu được tổ chức phân tầng rõ ràng t
   - `language`: Ngôn ngữ nhận xét (`vi`, `en`).
   - `review_text`: Nội dung nhận xét đã loại bỏ HTML, ký tự thừa.
   - `review_date`, `learner_level`, `helpful_count`.
+
+### 2.4. Báo cáo xu hướng nghề nghiệp quốc tế (World Economic Forum - WEF)
+- **Nguồn:** Báo cáo tương lai việc làm (The Future of Jobs Report) từ Diễn đàn Kinh tế Thế giới (WEF).
+- **Mục đích:** Cung cấp thông tin xu hướng công nghệ toàn cầu, nhóm nghề tăng trưởng (Emerging Jobs), nghề suy giảm (Declining Jobs), kỹ năng cốt lõi (Core Skills) và mức độ liên đới để đối chiếu với thị trường việc làm Việt Nam và đề xuất chương trình đào tạo.
+- **Quy mô:** 31 bản ghi thô -> **25 bản ghi sạch chuẩn hóa** sau khi loại bỏ trùng lặp.
+- **Các trường dữ liệu chính:**
+  - `trend_id`: Mã định danh xu hướng.
+  - `category`: Nhóm xu hướng (Emerging Jobs, Declining Jobs, Core Skills, Technology Adoption).
+  - `item_name`: Tên nghề/kỹ năng/công nghệ.
+  - `growth_rate_pct`: Tỷ lệ tăng trưởng dự báo (% tăng trưởng toàn cầu).
+  - `global_demand_level`: Mức độ nhu cầu toàn cầu (Very High, High, Moderate, Declining).
+  - `primary_sector`: Nhóm ngành tác động chính.
+  - `reskilling_months`: Thời gian đào tạo lại trung bình (tháng).
+  - `vietnam_relevance`: Mức độ thích ứng và tiềm năng phát triển tại Việt Nam (High, Medium, Emerging).
+  - `trend_description`: Diễn giải chi tiết xu hướng.
+
 
 ---
 
