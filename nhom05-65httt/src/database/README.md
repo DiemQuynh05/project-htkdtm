@@ -61,3 +61,13 @@ DB_PORT=5432
 ```
 Sau đó chạy `python manage.py migrate` để đồng bộ các bảng của Django/Wagtail.
 
+---
+
+## 3. Data Warehouse Star Schema & BI Views (`schema dw`)
+Phần mở rộng **Data Warehouse & BI** (phụ trách: **Nguyễn Quang Đức**) bổ sung các tệp sau:
+- [dw_star_schema.sql](dw_star_schema.sql): Lược đồ hình sao `dw` gồm 9 bảng Dimension (`dim_date`, `dim_semester`, `dim_course`, `dim_student`, `dim_assessment`, `dim_provider`, `dim_industry`, `dim_location`, `dim_skill`) và 7 bảng Fact (`fact_ket_qua_hoc_tap`, `fact_assessment_performance`, `fact_vle_engagement`, `fact_course_reviews`, `fact_job_postings`, `fact_job_skills`, `fact_wef_trends`).
+- [dw_etl_from_staging.sql](dw_etl_from_staging.sql): Script SQL ETL chuyển đổi dữ liệu từ bảng staging (`public.*`) sang Star Schema (`dw.*`).
+- [etl_warehouse.py](etl_warehouse.py): Pipeline Python nạp toàn bộ dữ liệu sạch từ `data/processed/` vào PostgreSQL và cập nhật các BI Views.
+- [dw_views_academic.sql](dw_views_academic.sql), [dw_views_quality.sql](dw_views_quality.sql), [dw_views_careers.sql](dw_views_careers.sql): Các View phân tích phục vụ trực tiếp cho 3 Dashboard trên Apache Superset (xem thêm tại [../bi/README.md](../bi/README.md)).
+
+
