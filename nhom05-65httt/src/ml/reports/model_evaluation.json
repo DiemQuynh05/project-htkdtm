@@ -1,0 +1,236 @@
+{
+  "metadata": {
+    "model_name": "HistGradientBoosting",
+    "model_version": "202611270032",
+    "trained_at": "2026-11-27T00:32:52",
+    "cutoff_day": 90,
+    "decision_threshold": 0.33,
+    "risk_bands": {
+      "Low": "< 0.30",
+      "Medium": "0.30 - < 0.60",
+      "High": ">= 0.60"
+    },
+    "target": "1 = Fail/Withdrawn (không hoàn thành), 0 = Pass/Distinction",
+    "scope": "Học viên có ít nhất 1 bản ghi VLE hoặc bài đánh giá",
+    "n_scope": 1500,
+    "n_total": 3000,
+    "numeric_features": [
+      "num_of_prev_attempts",
+      "studied_credits",
+      "vle_total_clicks",
+      "vle_active_days",
+      "vle_n_records",
+      "vle_clicks_per_day",
+      "vle_last_active_day",
+      "vle_clicks_forumng",
+      "vle_clicks_oucontent",
+      "vle_clicks_quiz",
+      "vle_clicks_resource",
+      "vle_clicks_url",
+      "vle_clicks_subpage",
+      "asm_due",
+      "asm_submitted",
+      "asm_submit_rate",
+      "asm_avg_score",
+      "asm_min_score",
+      "asm_weighted_score",
+      "asm_late_count",
+      "asm_avg_delay_days"
+    ],
+    "categorical_features": [
+      "code_module",
+      "gender",
+      "region",
+      "highest_education",
+      "imd_band",
+      "age_band",
+      "disability"
+    ],
+    "sklearn_version": "1.9.1",
+    "random_state": 42
+  },
+  "selected_model": "HistGradientBoosting",
+  "test_metrics": {
+    "threshold": 0.33,
+    "f1": 0.9799,
+    "precision": 0.9839,
+    "recall": 0.976,
+    "accuracy": 0.9833,
+    "roc_auc": 0.9946,
+    "pr_auc": 0.9944,
+    "confusion_matrix": {
+      "tn": 173,
+      "fp": 2,
+      "fn": 3,
+      "tp": 122
+    },
+    "n": 300,
+    "positive_rate": 0.4167
+  },
+  "f1_target": 0.75,
+  "f1_target_met": true,
+  "test_recall_by_final_result": {
+    "Distinction": 0.0,
+    "Fail": 0.9605,
+    "Pass": 0.0146,
+    "Withdrawn": 1.0
+  },
+  "model_comparison": [
+    {
+      "model": "LogisticRegression",
+      "cv_f1": 0.9477,
+      "cv_roc_auc": 0.9884,
+      "cv_pr_auc": 0.9867,
+      "threshold": 0.56,
+      "test_f1": 0.9365,
+      "test_precision": 0.9291,
+      "test_recall": 0.944,
+      "test_roc_auc": 0.9791,
+      "test_pr_auc": 0.9649
+    },
+    {
+      "model": "RandomForest",
+      "cv_f1": 0.9656,
+      "cv_roc_auc": 0.9942,
+      "cv_pr_auc": 0.9931,
+      "threshold": 0.71,
+      "test_f1": 0.9551,
+      "test_precision": 0.975,
+      "test_recall": 0.936,
+      "test_roc_auc": 0.9928,
+      "test_pr_auc": 0.9912
+    },
+    {
+      "model": "HistGradientBoosting",
+      "cv_f1": 0.977,
+      "cv_roc_auc": 0.9977,
+      "cv_pr_auc": 0.9971,
+      "threshold": 0.33,
+      "test_f1": 0.9799,
+      "test_precision": 0.9839,
+      "test_recall": 0.976,
+      "test_roc_auc": 0.9946,
+      "test_pr_auc": 0.9944
+    },
+    {
+      "model": "RuleBaseline (submit<50% | score<40)",
+      "cv_f1": null,
+      "cv_roc_auc": null,
+      "cv_pr_auc": null,
+      "threshold": null,
+      "test_f1": 0.7349,
+      "test_precision": 0.8778,
+      "test_recall": 0.632,
+      "test_roc_auc": null,
+      "test_pr_auc": null
+    }
+  ],
+  "early_warning_curve": [
+    {
+      "cutoff_day": 30,
+      "best_model": "RandomForest",
+      "threshold": 0.48,
+      "f1": 0.6642,
+      "precision": 0.6224,
+      "recall": 0.712,
+      "roc_auc": 0.8149
+    },
+    {
+      "cutoff_day": 60,
+      "best_model": "RandomForest",
+      "threshold": 0.66,
+      "f1": 0.9091,
+      "precision": 0.9402,
+      "recall": 0.88,
+      "roc_auc": 0.9758
+    },
+    {
+      "cutoff_day": 90,
+      "best_model": "HistGradientBoosting",
+      "threshold": 0.33,
+      "f1": 0.9799,
+      "precision": 0.9839,
+      "recall": 0.976,
+      "roc_auc": 0.9946
+    },
+    {
+      "cutoff_day": 120,
+      "best_model": "HistGradientBoosting",
+      "threshold": 0.1,
+      "f1": 0.996,
+      "precision": 0.9921,
+      "recall": 1.0,
+      "roc_auc": 0.9999
+    },
+    {
+      "cutoff_day": 150,
+      "best_model": "HistGradientBoosting",
+      "threshold": 0.36,
+      "f1": 0.988,
+      "precision": 0.9919,
+      "recall": 0.984,
+      "roc_auc": 0.9999
+    },
+    {
+      "cutoff_day": 240,
+      "best_model": "HistGradientBoosting",
+      "threshold": 0.1,
+      "f1": 0.9921,
+      "precision": 0.9843,
+      "recall": 1.0,
+      "roc_auc": 1.0
+    }
+  ],
+  "top_features": [
+    {
+      "feature": "asm_avg_score",
+      "importance_mean": 0.156,
+      "importance_std": 0.0199
+    },
+    {
+      "feature": "asm_min_score",
+      "importance_mean": 0.0638,
+      "importance_std": 0.0091
+    },
+    {
+      "feature": "asm_submitted",
+      "importance_mean": 0.0556,
+      "importance_std": 0.0047
+    },
+    {
+      "feature": "vle_clicks_per_day",
+      "importance_mean": 0.0018,
+      "importance_std": 0.0014
+    },
+    {
+      "feature": "imd_band",
+      "importance_mean": 0.0008,
+      "importance_std": 0.0002
+    },
+    {
+      "feature": "vle_clicks_oucontent",
+      "importance_mean": 0.0003,
+      "importance_std": 0.0004
+    },
+    {
+      "feature": "highest_education",
+      "importance_mean": 0.0002,
+      "importance_std": 0.0004
+    },
+    {
+      "feature": "vle_clicks_quiz",
+      "importance_mean": 0.0002,
+      "importance_std": 0.0002
+    },
+    {
+      "feature": "disability",
+      "importance_mean": 0.0002,
+      "importance_std": 0.0001
+    },
+    {
+      "feature": "vle_active_days",
+      "importance_mean": 0.0002,
+      "importance_std": 0.0001
+    }
+  ]
+}

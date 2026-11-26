@@ -1,0 +1,50 @@
+{
+  "model_name": "HistGradientBoosting",
+  "model_version": "202611270032",
+  "trained_at": "2026-11-27T00:32:52",
+  "cutoff_day": 90,
+  "decision_threshold": 0.33,
+  "risk_bands": {
+    "Low": "< 0.30",
+    "Medium": "0.30 - < 0.60",
+    "High": ">= 0.60"
+  },
+  "target": "1 = Fail/Withdrawn (không hoàn thành), 0 = Pass/Distinction",
+  "scope": "Học viên có ít nhất 1 bản ghi VLE hoặc bài đánh giá",
+  "n_scope": 1500,
+  "n_total": 3000,
+  "numeric_features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "vle_total_clicks",
+    "vle_active_days",
+    "vle_n_records",
+    "vle_clicks_per_day",
+    "vle_last_active_day",
+    "vle_clicks_forumng",
+    "vle_clicks_oucontent",
+    "vle_clicks_quiz",
+    "vle_clicks_resource",
+    "vle_clicks_url",
+    "vle_clicks_subpage",
+    "asm_due",
+    "asm_submitted",
+    "asm_submit_rate",
+    "asm_avg_score",
+    "asm_min_score",
+    "asm_weighted_score",
+    "asm_late_count",
+    "asm_avg_delay_days"
+  ],
+  "categorical_features": [
+    "code_module",
+    "gender",
+    "region",
+    "highest_education",
+    "imd_band",
+    "age_band",
+    "disability"
+  ],
+  "sklearn_version": "1.9.1",
+  "random_state": 42
+}

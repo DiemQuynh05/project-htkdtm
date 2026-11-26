@@ -20,6 +20,8 @@ urlpatterns = [
     path("dashboard/nganh-nghe/", dashboard_views.careers, name="careers"),
     path("dashboard/skill-gap/", dashboard_views.skill_gap, name="skill_gap"),
     path("dashboard/de-xuat/", dashboard_views.recommendations, name="recommendations"),
+    path("api/ml/risk-predictions/", dashboard_views.api_risk_predictions, name="api_risk_predictions"),
+    path("api/ml/risk-model-report/", dashboard_views.api_risk_model_report, name="api_risk_model_report"),
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),

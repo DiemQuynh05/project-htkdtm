@@ -1,0 +1,5 @@
+model,cv_f1,cv_roc_auc,cv_pr_auc,threshold,test_f1,test_precision,test_recall,test_roc_auc,test_pr_auc
+LogisticRegression,0.9477,0.9884,0.9867,0.56,0.9365,0.9291,0.944,0.9791,0.9649
+RandomForest,0.9656,0.9942,0.9931,0.71,0.9551,0.975,0.936,0.9928,0.9912
+HistGradientBoosting,0.977,0.9977,0.9971,0.33,0.9799,0.9839,0.976,0.9946,0.9944
+RuleBaseline (submit<50% | score<40),,,,,0.7349,0.8778,0.632,,

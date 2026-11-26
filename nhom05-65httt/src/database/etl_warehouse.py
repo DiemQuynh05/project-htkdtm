@@ -293,6 +293,53 @@ def load_vle_engagement_to_dw(conn):
     print(f"[+] DW fact_vle_engagement: {inserted} dòng tổng hợp từ {len(df_vle)} log VLE")
 
 
+def load_risk_predictions_to_dw(conn):
+    """Nạp kết quả dự báo nguy cơ của mô hình ML (Nguyễn Anh Quân) vào dw.fact_risk_prediction.
+
+    Nguồn: data/processed/ml/student_risk_predictions.csv (sinh bởi src/ml/predict_risk.py).
+    """
+    pred_csv = os.path.join(PROCESSED_DIR, "ml", "student_risk_predictions.csv")
+    if not os.path.exists(pred_csv):
+        print("[i] Chưa có student_risk_predictions.csv -> bỏ qua nạp dự báo ML "
+              "(chạy src/ml/train_risk_model.py và src/ml/predict_risk.py trước).")
+        return
+
+    df = pd.read_csv(pred_csv)
+    cur = conn.cursor()
+    cur.execute("SELECT id_student, student_sk FROM dw.dim_student")
+    student_map = dict(cur.fetchall())
+    cur.execute("SELECT course_code, course_sk FROM dw.dim_course WHERE source_system = 'OULAD'")
+    course_map = dict(cur.fetchall())
+
+    inserted = 0
+    for _, r in df.iterrows():
+        s_sk = student_map.get(int(r["id_student"]))
+        c_sk = course_map.get(f"{r['code_module']}-{r['code_presentation']}")
+        if not (s_sk and c_sk):
+            continue
+        prob = None if pd.isna(r["risk_probability"]) else float(r["risk_probability"])
+        cur.execute(
+            """
+            INSERT INTO dw.fact_risk_prediction (
+                student_sk, course_sk, model_name, model_version, cutoff_day,
+                risk_probability, predicted_label, predicted_risk_level
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (student_sk, course_sk, model_version) DO UPDATE SET
+                risk_probability = EXCLUDED.risk_probability,
+                predicted_label = EXCLUDED.predicted_label,
+                predicted_risk_level = EXCLUDED.predicted_risk_level,
+                predicted_at = CURRENT_TIMESTAMP
+            """,
+            (s_sk, c_sk, r["model_name"], str(r["model_version"]), int(r["cutoff_day"]),
+             prob, int(r["predicted_label"]), r["predicted_risk_level"]),
+        )
+        inserted += 1
+
+    conn.commit()
+    cur.close()
+    print(f"[+] DW fact_risk_prediction: {inserted}/{len(df)} dự báo ML")
+
+
 def run_warehouse_etl():
     print("=== BẮT ĐẦU QUY TRÌNH ETL DATA WAREHOUSE (NGUYỄN QUANG ĐỨC) ===")
     try:
@@ -310,6 +357,8 @@ def run_warehouse_etl():
         execute_sql_file(conn, "dw_views_academic.sql")
         execute_sql_file(conn, "dw_views_quality.sql")
         execute_sql_file(conn, "dw_views_careers.sql")
+        execute_sql_file(conn, "dw_ml_risk_predictions.sql")
+        load_risk_predictions_to_dw(conn)
         print("=== HOÀN TẤT ETL DATA WAREHOUSE & BI VIEWS ===")
     finally:
         conn.close()
